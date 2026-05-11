@@ -102,7 +102,7 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5175',
     'http://localhost:5173',
-    'https://votre-frontend.vercel.app',
+    'https://wonderpark-booking.vercel.app',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
