@@ -14,11 +14,20 @@ def creer_paiement(request):
     serializer = CreerPaiementSerializer(data=request.data)
     if serializer.is_valid():
         data = serializer.validated_data
-        reservation = get_object_or_404(
-            Reservation,
-            id=data['reservation_id'],
-            client=request.user
-        )
+
+        # Si caissier ou admin, chercher sans filtrer par client
+        if request.user.role in ['caissier', 'admin', 'gestionnaire']:
+            reservation = get_object_or_404(
+                Reservation,
+                id=data['reservation_id']
+            )
+        else:
+            # Client normal : vérifier que c'est sa réservation
+            reservation = get_object_or_404(
+                Reservation,
+                id=data['reservation_id'],
+                client=request.user
+            )
 
         # Vérifier si paiement existe déjà
         if hasattr(reservation, 'paiement'):
