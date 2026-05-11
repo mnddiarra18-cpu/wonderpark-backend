@@ -30,7 +30,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 def create(self, validated_data):
     validated_data.pop('confirm_password')
     
-    # Vérifier si l'email existe déjà
+def create(self, validated_data):
+    validated_data.pop('confirm_password')  
     email = validated_data['email']
     if Utilisateur.objects.filter(email=email).exists():
         raise serializers.ValidationError(
