@@ -27,19 +27,27 @@ class RegisterSerializer(serializers.ModelSerializer):
                 "Les mots de passe ne correspondent pas"
             )
         return data
-
-    def create(self, validated_data):
-        validated_data.pop('confirm_password')
-        user = Utilisateur.objects.create_user(
-            username=validated_data['email'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            telephone=validated_data.get('telephone', ''),
-            password=validated_data['password'],
-            role='client'
+def create(self, validated_data):
+    validated_data.pop('confirm_password')
+    
+    # Vérifier si l'email existe déjà
+    email = validated_data['email']
+    if Utilisateur.objects.filter(email=email).exists():
+        raise serializers.ValidationError(
+            {"email": "Un compte avec cet email existe déjà"}
         )
-        return user
+    
+    user = Utilisateur.objects.create_user(
+        username=email,
+        email=email,
+        first_name=validated_data['first_name'],
+        last_name=validated_data['last_name'],
+        telephone=validated_data.get('telephone', ''),
+        password=validated_data['password'],
+        role='client'
+    )
+    return user
+    
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
