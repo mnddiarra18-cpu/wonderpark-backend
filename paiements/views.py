@@ -60,7 +60,41 @@ def creer_paiement(request):
         serializer.errors,
         status=status.HTTP_400_BAD_REQUEST
     )
-
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def initier_paiement_wave(request):
+    reservation_id = request.data.get('reservation_id')
+    montant = request.data.get('montant')
+    
+    if not reservation_id or not montant:
+        return Response(
+            {'error': 'reservation_id et montant requis'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    reservation = get_object_or_404(
+        Reservation, id=reservation_id
+    )
+    
+    # Générer référence unique
+    reference = f"PAY-{uuid.uuid4().hex[:8].upper()}"
+    
+    # URL de redirection après paiement Wave
+    # Wave utilise ce format pour le deep link
+    numero_wave = "221781234567"  # Numéro Wave de Wonderpark
+    lien_wave = (
+        f"https://pay.wave.com/m/wonderpark"
+        f"?amount={montant}"
+        f"&currency=XOF"
+        f"&reference={reference}"
+    )
+    
+    return Response({
+        'lien_wave': lien_wave,
+        'reference': reference,
+        'montant': montant,
+        'reservation_id': reservation_id
+    })
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def mes_paiements(request):

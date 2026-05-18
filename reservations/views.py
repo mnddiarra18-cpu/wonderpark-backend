@@ -10,9 +10,29 @@ from activites.models import Formule
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def creer_reservation(request):
+    if request.user.role not in ['client', 'admin']:
+        return Response(
+            {'error': 'Seuls les clients peuvent faire des réservations'},
+            status=status.HTTP_403_FORBIDDEN
+        )
     serializer = CreerReservationSerializer(data=request.data)
     if serializer.is_valid():
         data = serializer.validated_data
+
+          # Vérifier que le nombre d'enfants est raisonnable
+        if data['nombre_enfants'] > 20:
+            return Response(
+                {'error': 'Nombre d\'enfants maximum : 20'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Vérifier que la date n'est pas dans le passé
+        from datetime import date
+        if data.get('date') and data['date'] < date.today():
+            return Response(
+                {'error': 'La date de réservation ne peut pas être dans le passé'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         formule = get_object_or_404(Formule, id=data['formule_id'])
 
         # Calcul du montant

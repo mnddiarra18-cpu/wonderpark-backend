@@ -9,4 +9,6 @@ urlpatterns = [
          name='statistiques_paiements'),
     path('<int:pk>/rembourser/', views.rembourser_paiement,
          name='rembourser_paiement'),
+         path('initier-wave/', views.initier_paiement_wave,
+     name='initier_wave'),
 ]

@@ -10,6 +10,14 @@ from .serializers import (
     RegisterSerializer,
     LoginSerializer
 )
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from axes.decorators import axes_dispatch
+import re
+
+def valider_email(email):
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -38,7 +46,27 @@ def login(request):
     if serializer.is_valid():
         email = serializer.validated_data['email']
         password = serializer.validated_data['password']
-        user = authenticate(username=email, password=password)
+
+        # Validation format email
+        if not valider_email(email):
+            return Response(
+                {'error': 'Format email invalide'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Validation longueur mot de passe
+        if len(password) < 6:
+            return Response(
+                {'error': 'Mot de passe trop court'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = authenticate(
+            request=request,
+            username=email,
+            password=password
+        )
+
         if user:
             if not user.statut:
                 return Response(
@@ -54,10 +82,12 @@ def login(request):
                     'access': str(refresh.access_token)
                 }
             })
+
         return Response(
             {'error': 'Email ou mot de passe incorrect'},
             status=status.HTTP_401_UNAUTHORIZED
         )
+
     return Response(
         serializer.errors,
         status=status.HTTP_400_BAD_REQUEST
