@@ -54,13 +54,7 @@ def login(request):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # Validation longueur mot de passe
-        if len(password) < 6:
-            return Response(
-                {'error': 'Mot de passe trop court'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
+      
         user = authenticate(
             request=request,
             username=email,
