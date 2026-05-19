@@ -44,6 +44,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.middleware.SecurityLoggingMiddleware',
 
 ]
  
@@ -169,6 +170,32 @@ LOGGING = {
         'handlers': ['console'],
         'level': 'DEBUG',
     },
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'security': {
+            'format': '[{levelname}] {asctime} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'security_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'security.log',
+            'formatter': 'security',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'security': {
+            'handlers': ['security_file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
 }
 # Sécurité
 SECURE_BROWSER_XSS_FILTER = True
@@ -190,3 +217,11 @@ if not DEBUG:
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = 1  # 1 heure
 AXES_LOCKOUT_PARAMETERS = ['ip_address']
+
+# Protection contre les attaques de type CSRF et XSS
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+PERMISSIONS_POLICY = {
+    'geolocation': [],
+    'microphone': [],
+    'camera': [],
+}

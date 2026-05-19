@@ -1,7 +1,20 @@
 from rest_framework import serializers
 from .models import Utilisateur
 import re
+import html
 
+def nettoyer_chaine(valeur):
+    if isinstance(valeur, str):
+        return html.escape(valeur.strip())
+    return valeur
+
+class RegisterSerializer(serializers.ModelSerializer):
+    ...
+    def validate_first_name(self, value):
+        return nettoyer_chaine(value)
+
+    def validate_last_name(self, value):
+        return nettoyer_chaine(value)
 
 class UtilisateurSerializer(serializers.ModelSerializer):
     class Meta:

@@ -13,7 +13,9 @@ from .serializers import (
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from axes.decorators import axes_dispatch
+from django_ratelimit.decorators import ratelimit
 import re
+
 
 def valider_email(email):
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
@@ -21,6 +23,7 @@ def valider_email(email):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@ratelimit(key='ip', rate='3/m', method='POST', block=True)
 def register(request):
     serializer = RegisterSerializer(data=request.data)
     if serializer.is_valid():
@@ -41,6 +44,7 @@ def register(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@ratelimit(key='ip', rate='5/m', method='POST', block=True)
 def login(request):
     serializer = LoginSerializer(data=request.data)
     if serializer.is_valid():

@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import hashlib
+
 
 class Utilisateur(AbstractUser):
     ROLES = [
@@ -18,6 +20,8 @@ class Utilisateur(AbstractUser):
     )
     date_creation = models.DateTimeField(auto_now_add=True)
     statut = models.BooleanField(default=True)
-
+    derniere_connexion_ip = models.GenericIPAddressField(
+        null=True, blank=True
+    )
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.role})"
