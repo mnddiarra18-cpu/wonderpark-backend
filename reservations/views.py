@@ -52,6 +52,7 @@ def creer_reservation(request):
             montant_total=montant_total,
             notes=data.get('notes', ''),
             statut='en_attente'
+            mode_paiement=data.get('mode_paiement', 'sur_place'),
         )
 
         # Créer les enfants seulement si présents

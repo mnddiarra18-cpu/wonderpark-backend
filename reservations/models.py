@@ -6,6 +6,11 @@ class Reservation(models.Model):
         ('confirmee', 'Confirmée'),
         ('annulee', 'Annulée'),
     ]
+    MODES_PAIEMENT = [
+        ('en_ligne', 'En ligne'),
+        ('sur_place', 'Sur place'),
+    ]
+
     client = models.ForeignKey(
         'users.Utilisateur',
         on_delete=models.CASCADE,
@@ -35,9 +40,15 @@ class Reservation(models.Model):
         decimal_places=2
     )
     notes = models.TextField(blank=True)
+    mode_paiement = models.CharField(
+        max_length=20,
+        choices=MODES_PAIEMENT,
+        default='sur_place'
+    )
 
     def __str__(self):
         return f"Réservation {self.id}"
+
 
 class Enfant(models.Model):
     reservation = models.ForeignKey(
