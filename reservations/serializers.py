@@ -30,13 +30,17 @@ class ReservationSerializer(serializers.ModelSerializer):
     def get_formule_nom(self, obj):
         return obj.formule.nom if obj.formule else None
     
-    def get_mode_paiement(self, obj):
-        return obj.mode_paiement  
-
-def get_methode_paiement(self, obj):
+    def get_methode_paiement(self, obj):
     try:
-        return obj.paiement.methode_paiement  
-    except:
+        paiement = obj.paiement
+        return paiement.methode_paiement
+    except Exception:
+        return None
+
+def get_mode_paiement(self, obj):
+    try:
+        return obj.mode_paiement
+    except Exception:
         return None
 class CreerReservationSerializer(serializers.Serializer):
     formule_id = serializers.IntegerField()
