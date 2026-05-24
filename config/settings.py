@@ -45,10 +45,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'users.middleware.SecurityLoggingMiddleware',
-
+    'axes.middleware.AxesMiddleware', 
 ]
  
 AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+
     'django.contrib.auth.backends.ModelBackend',
 ]
 

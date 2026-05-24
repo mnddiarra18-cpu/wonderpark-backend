@@ -44,16 +44,16 @@ def creer_reservation(request):
         montant_total = prix_formule + prix_accompagnateurs
 
         # Créer la réservation
-        reservation = Reservation.objects.create (
-            client=request.user,
-            formule=formule,
-            nombre_enfants=data['nombre_enfants'],
-            nombre_accompagnateurs=data['nombre_accompagnateurs'],
-            montant_total=montant_total,
-            notes=data.get('notes', ''),
-            statut='en_attente',
-            mode_paiement=data.get('mode_paiement', 'sur_place'),
-        )
+        reservation = Reservation.objects.create(
+      client=request.user,
+       formule=formule,
+    nombre_enfants=data['nombre_enfants'],
+    nombre_accompagnateurs=data['nombre_accompagnateurs'],
+    montant_total=montant_total,
+    notes=data.get('notes', ''),
+    mode_paiement_choisi=data.get('mode_paiement', 'sur_place'),
+    statut='en_attente'
+)
 
         # Créer les enfants seulement si présents
         enfants_data = data.get('enfants', [])

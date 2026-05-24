@@ -4,13 +4,17 @@ from .models import Paiement
 class PaiementSerializer(serializers.ModelSerializer):
     reservation_id = serializers.SerializerMethodField()
     client_nom = serializers.SerializerMethodField()
+    mode_paiement = serializers.SerializerMethodField()
+    methode_paiement_display = serializers.SerializerMethodField()
+
+
 
     class Meta:
         model = Paiement
         fields = [
             'id', 'reservation_id', 'client_nom',
             'montant', 'date_paiement', 'mode_paiement',
-            'methode_paiement', 'statut', 'reference'
+            'methode_paiement', 'statut', 'reference','mode_paiement'
         ]
 
     def get_reservation_id(self, obj):
@@ -19,6 +23,12 @@ class PaiementSerializer(serializers.ModelSerializer):
     def get_client_nom(self, obj):
         client = obj.reservation.client
         return f"{client.first_name} {client.last_name}"
+    
+    def get_mode_paiement(self, obj):
+        try:
+            return obj.reservation.mode_paiement
+        except Exception:
+            return 'sur_place'
 
 class CreerPaiementSerializer(serializers.Serializer):
     reservation_id = serializers.IntegerField()

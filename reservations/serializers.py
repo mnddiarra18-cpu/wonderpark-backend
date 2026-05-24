@@ -13,6 +13,7 @@ class ReservationSerializer(serializers.ModelSerializer):
     formule_nom = serializers.SerializerMethodField()
     mode_paiement = serializers.SerializerMethodField()
     methode_paiement = serializers.SerializerMethodField()
+
     class Meta:
         model = Reservation
         fields = [
@@ -21,7 +22,6 @@ class ReservationSerializer(serializers.ModelSerializer):
             'nombre_enfants', 'nombre_accompagnateurs',
             'statut', 'montant_total', 'notes', 'enfants',
             'mode_paiement', 'methode_paiement'
-
         ]
 
     def get_client_nom(self, obj):
@@ -29,18 +29,17 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     def get_formule_nom(self, obj):
         return obj.formule.nom if obj.formule else None
-    
-    def get_methode_paiement(self, obj):
-        try:
-            paiement = obj.paiement
-            return paiement.methode_paiement
-        except Exception:
-            return None
 
     def get_mode_paiement(self, obj):
         try:
-            return obj.mode_paiement
-        except Exception:
+            return obj.paiement.mode_paiement
+        except:
+            return obj.mode_paiement_choisi
+
+    def get_methode_paiement(self, obj):
+        try:
+            return obj.paiement.methode_paiement
+        except:
             return None
 
 class CreerReservationSerializer(serializers.Serializer):

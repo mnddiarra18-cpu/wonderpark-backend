@@ -45,8 +45,14 @@ class Reservation(models.Model):
         choices=MODES_PAIEMENT,
         default='sur_place'
     )
-
-    def __str__(self):
+mode_paiement_choisi = models.CharField(  
+        max_length=20,
+        choices=MODES,
+        default='sur_place',
+        blank=True
+    )
+    
+def __str__(self):
         return f"Réservation {self.id}"
 
 
