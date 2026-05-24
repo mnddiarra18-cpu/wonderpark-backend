@@ -44,9 +44,9 @@ def creer_reservation(request):
         montant_total = prix_formule + prix_accompagnateurs
 
         # Créer la réservation
-        reservation = Reservation.objects.create(
-      client=request.user,
-       formule=formule,
+    reservation = Reservation.objects.create(
+    client=request.user,
+    formule=formule,
     nombre_enfants=data['nombre_enfants'],
     nombre_accompagnateurs=data['nombre_accompagnateurs'],
     montant_total=montant_total,
