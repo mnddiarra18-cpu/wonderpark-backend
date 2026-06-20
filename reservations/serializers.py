@@ -30,21 +30,22 @@ class ReservationSerializer(serializers.ModelSerializer):
     def get_formule_nom(self, obj):
         return obj.formule.nom if obj.formule else None
 
-def get_mode_paiement(self, obj):
-    try:
-        if obj.paiement:
-            return obj.paiement.mode_paiement
-    except:
-        pass
-    return obj.mode_paiement_choisi if hasattr(obj, 'mode_paiement_choisi') else None
+    def get_mode_paiement(self, obj):
+        try:
+            if obj.paiement:
+                return obj.paiement.mode_paiement
+        except:
+            pass
+        return obj.mode_paiement_choisi if hasattr(obj, 'mode_paiement_choisi') else None
 
-def get_methode_paiement(self, obj):
-    try:
-        if obj.paiement:
-            return obj.paiement.methode_paiement
-    except:
-        pass
-    return None
+    def get_methode_paiement(self, obj):
+        try:
+            if obj.paiement:
+                return obj.paiement.methode_paiement
+        except:
+            pass
+        return None
+
 
 class CreerReservationSerializer(serializers.Serializer):
     formule_id = serializers.IntegerField()
@@ -52,7 +53,7 @@ class CreerReservationSerializer(serializers.Serializer):
     nombre_enfants = serializers.IntegerField(min_value=1)
     nombre_accompagnateurs = serializers.IntegerField(min_value=0)
     enfants = EnfantSerializer(many=True, required=False, default=[])
-    mode_paiement_choisi = serializers.ChoiceField(
+    mode_paiement = serializers.ChoiceField(
         choices=['en_ligne', 'sur_place']
     )
     notes = serializers.CharField(required=False, allow_blank=True)
@@ -65,7 +66,6 @@ class CreerReservationSerializer(serializers.Serializer):
     age_anniversaire = serializers.CharField(
         required=False, allow_blank=True
     )
-    notes = serializers.CharField(required=False, allow_blank=True)
 
     def validate_formule_id(self, value):
         try:
