@@ -4,7 +4,6 @@ from .models import Paiement
 class PaiementSerializer(serializers.ModelSerializer):
     reservation_id = serializers.SerializerMethodField()
     client_nom = serializers.SerializerMethodField()
-    mode_paiement = serializers.SerializerMethodField()
     methode_paiement_display = serializers.SerializerMethodField()
 
     class Meta:
@@ -23,12 +22,6 @@ class PaiementSerializer(serializers.ModelSerializer):
         client = obj.reservation.client
         return f"{client.first_name} {client.last_name}"
 
-    def get_mode_paiement(self, obj):
-        try:
-            return obj.reservation.mode_paiement_choisi
-        except Exception:
-            return 'sur_place'
-
     def get_methode_paiement_display(self, obj):
         labels = {
             'carte': 'Carte Bancaire',
@@ -37,17 +30,3 @@ class PaiementSerializer(serializers.ModelSerializer):
             'especes': 'Espèces'
         }
         return labels.get(obj.methode_paiement, obj.methode_paiement)
-
-
-class CreerPaiementSerializer(serializers.Serializer):
-    reservation_id = serializers.IntegerField()
-    methode_paiement = serializers.ChoiceField(
-        choices=['carte', 'orange_money', 'wave', 'especes']
-    )
-    mode_paiement = serializers.ChoiceField(
-        choices=['en_ligne', 'sur_place']
-    )
-    numero_mobile = serializers.CharField(
-        required=False,
-        allow_blank=True
-    )
