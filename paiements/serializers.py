@@ -31,7 +31,8 @@ class PaiementSerializer(serializers.ModelSerializer):
         }
         return labels.get(obj.methode_paiement, obj.methode_paiement)
 
-        class CreerPaiementSerializer(serializers.Serializer):
+
+class CreerPaiementSerializer(serializers.Serializer):
     reservation_id = serializers.IntegerField()
     methode_paiement = serializers.ChoiceField(
         choices=['carte', 'orange_money', 'wave', 'especes']
