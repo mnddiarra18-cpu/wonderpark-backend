@@ -45,7 +45,7 @@ class Reservation(models.Model):
         choices=MODES_PAIEMENT,
         default='sur_place'
     )
-mode_paiement_choisi = models.CharField(  
+    mode_paiement_choisi = models.CharField(  
         max_length=20,
         choices=MODES,
         default='sur_place',
