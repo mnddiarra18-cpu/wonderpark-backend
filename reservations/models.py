@@ -40,14 +40,10 @@ class Reservation(models.Model):
         decimal_places=2
     )
     notes = models.TextField(blank=True)
-    mode_paiement = models.CharField(
-        max_length=20,
-        choices=MODES_PAIEMENT,
-        default='sur_place'
-    )
+    
     mode_paiement_choisi = models.CharField(  
         max_length=20,
-        choices=MODES,
+        choices=MODES_PAIEMENT,
         default='sur_place',
         blank=True
     )

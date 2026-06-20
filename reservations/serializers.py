@@ -52,7 +52,7 @@ class CreerReservationSerializer(serializers.Serializer):
     nombre_enfants = serializers.IntegerField(min_value=1)
     nombre_accompagnateurs = serializers.IntegerField(min_value=0)
     enfants = EnfantSerializer(many=True, required=False, default=[])
-    mode_paiement = serializers.ChoiceField(
+    mode_paiement_choisi = serializers.ChoiceField(
         choices=['en_ligne', 'sur_place']
     )
     notes = serializers.CharField(required=False, allow_blank=True)
